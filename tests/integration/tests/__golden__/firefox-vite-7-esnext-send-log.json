@@ -1,0 +1,71 @@
+{
+  "resourceLogs": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "vite-7-integration-test"
+            }
+          },
+          {
+            "key": "service.version",
+            "value": {
+              "stringValue": "0.0.1"
+            }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "webjs"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "2.0.1"
+            }
+          }
+        ],
+        "droppedAttributesCount": 0
+      },
+      "scopeLogs": [
+        {
+          "scope": {
+            "name": "vite-7-integration-test",
+            "version": "0.0.1"
+          },
+          "logRecords": [
+            {
+              "timeUnixNano": "1755182588361000000",
+              "observedTimeUnixNano": "1755182588361000000",
+              "severityNumber": 9,
+              "body": {
+                "stringValue": "This is a test log message"
+              },
+              "attributes": [
+                {
+                  "key": "session.id",
+                  "value": {
+                    "stringValue": "5CA621D5D7F7416C976389F749630397"
+                  }
+                }
+              ],
+              "droppedAttributesCount": 0,
+              "flags": 1,
+              "traceId": "21dafca27a59732d8f154fc80af5a08f",
+              "spanId": "c9601351a84055fe"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

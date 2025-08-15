@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SDK Stress Test App</title>
+  <script>
+    const SERVER_URL = 'http://localhost:3000/sample-request';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const usesSDK = urlParams.has('use_sdk');
+
+    let sdkReady = !usesSDK;
+
+    function setWorkingState() {
+      const element = document.getElementById('appState');
+      if (element) {
+        element.textContent = 'working';
+      }
+    }
+
+    function setIdleState() {
+      const element = document.getElementById('appState');
+      if (element) {
+        element.textContent = 'idle';
+      }
+    }
+
+    if (usesSDK) {
+      setWorkingState();
+      (function () {
+        window.SdkOnReady = {
+          q: [],
+          onReady: function (fn) {
+            window.SdkOnReady.q.push(fn);
+          },
+        };
+        const script = document.createElement('script');
+        script.async = true;
+        script.defer = true;
+        script.src = '/bundle.js';
+        script.onload = function () {
+          window.SdkOnReady.q.forEach(fn => fn());
+          window.SdkOnReady.q = [];
+          // Call onReady immediately if the SDK is already loaded
+          window.SdkOnReady.onReady = function (fn) {
+            fn();
+          };
+        };
+        const firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+      })();
+
+      window.SdkOnReady.onReady(() => {
+        // Insert an element showing that the SDK is loaded
+        const sdkLoadedIndicator = document.createElement('div');
+        sdkLoadedIndicator.textContent = 'Web SDK Loaded';
+        document.body.appendChild(sdkLoadedIndicator);
+
+        window.OTelSDK.initOTel();
+
+        sdkReady = true;
+
+        setIdleState();
+      });
+    } else {
+      window.SdkOnReady = {
+        onReady: function (fn) {
+          fn();
+        },
+      };
+    }
+
+    function runOnReady(fn) {
+      if (sdkReady) {
+        fn();
+      } else {
+        window.SdkOnReady.onReady(fn);
+      }
+    }
+
+    function flush() {
+      if (!usesSDK) {
+        return;
+      }
+
+      runOnReady(function() {
+        window.OTelSDK.flush();
+      })
+    }
+
+    function runNTimes(fn, n, waitTime) {
+      return async function() {
+        setWorkingState();
+
+        for (let i = 0; i < n; i++) {
+          await fn(i);
+
+          if (waitTime) {
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
+        }
+
+        setIdleState();
+      }
+    }
+
+    function generateFetchRequest() {
+      return fetch(SERVER_URL, {
+        method: 'GET',
+      })
+        .then(response => response.text())
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function generateXHRRequest() {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', SERVER_URL, true);
+        xhr.onload = function () {
+          resolve();
+        };
+        xhr.onerror = function () {
+          reject(new Error('Network error'));
+        };
+        xhr.send();
+      });
+    }
+
+    function clickButton(index) {
+      const button = document.getElementById(`button-${index}`);
+
+      if (button) {
+        button.click();
+      }
+    }
+
+    function throwException() {
+      if (usesSDK) {
+        // Log an exception instead of throwing it so execution continues
+        window.OTelSDK.logException(new Error());
+      } else {
+        // Just create the error so at least we match the number of exceptions created
+        const error = new Error('Test exception');
+      }
+    }
+  </script>
+</head>
+<body>
+<h1>Stress Test App</h1>
+<div>
+  <div id="appState">idle</div>
+  <button onclick="runOnReady(runNTimes(generateFetchRequest, 100))" id="startFetchRequestTest">Generate 100 fetch requests</button>
+  <button onclick="runOnReady(runNTimes(generateXHRRequest, 100))" id="startXHRRequestTest">Generate 100 XHR requests</button>
+  <button onclick="runOnReady(runNTimes(clickButton, 100, 50))" id="startButtonClickTest">Click 100 buttons</button>
+  <button onclick="runOnReady(runNTimes(throwException, 100, 50))" id="startExceptionTest">Throw 100 exceptions</button>
+  <button onclick="flush()" id="endSession">End Session</button>
+</div>
+</body>
+<script>
+  // Insert 100 buttons
+  for (let i = 0; i < 100; i++) {
+    const button = document.createElement('button');
+    button.textContent = `Button ${i}`;
+    button.id = `button-${i}`;
+    button.onclick = function() {
+      if (usesSDK) {
+        window.OTelSDK.log('Test Message');
+      }
+    };
+    document.body.appendChild(button);
+  }
+</script>
+</html>

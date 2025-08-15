@@ -1,0 +1,23 @@
+{
+  "name": "simple-stress-test",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "prepare": "cd platforms/vite-7 && npm install && npm run build",
+    "test": "npx playwright test"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "1.54.2",
+    "@types/chrome-remote-interface": "^0.31.14",
+    "@types/node": "^24.0.3",
+    "chrome-launcher": "^1.2.0",
+    "chrome-remote-interface": "^0.33.3",
+    "get-port": "^7.1.0",
+    "lighthouse": "^12.6.1",
+    "playwright": "1.54.2",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "name": "opentelemetry-js-web",
+  "version": "0.0.1",
+  "description": "OpenTelemetry Web SDK with test harness",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sdk:test:performance": "npm run sdk:test:integration:prepare && cd tests/performance && npm run test",
+    "sdk:test:performance:prepare": "cd tests/performance && npm run prepare",
+    "sdk:test:integration": "npm run sdk:test:integration:prepare && npm run sdk:test:integration:e2e",
+    "sdk:test:integration:prepare": "npm run sdk:test:integration:e2e:install-dependencies && npm run sdk:test:integration:build",
+    "sdk:test:integration:build": "cd tests/integration && npm run tests:integration:build",
+    "sdk:test:integration:e2e": "cd tests/integration && npm run tests:integration:e2e",
+    "sdk:test:integration:e2e:install-dependencies": "bash scripts/installE2EPlatformDependencies.sh",
+    "sdk:test:integration:e2e:update-golden": "cd tests/integration && npm run tests:integration:e2e:update-golden"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/embrace-io/opentelemetry-js-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/embrace-io/opentelemetry-js-web/issues"
+  },
+  "homepage": "https://github.com/embrace-io/opentelemetry-js-web#readme",
+  "workspaces": [
+    "tests/performance",
+    "tests/integration"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@eslint/js": "9.32.0",
+    "@remcovaes/web-test-runner-vite-plugin": "github:overbalance/web-test-runner-vite-plugin#patch-1",
+    "@rollup/plugin-commonjs": "28.0.6",
+    "@rollup/plugin-node-resolve": "16.0.1",
+    "@rollup/plugin-swc": "0.4.0",
+    "@rollup/plugin-terser": "0.4.4",
+    "@swc/core": "1.13.3",
+    "@types/chai": "5.2.2",
+    "@types/css-font-loading-module": "^0.0.14",
+    "@types/hoist-non-react-statics": "^3.3.6",
+    "@types/mocha": "10.0.10",
+    "@types/node": "22.15.32",
+    "@types/react": "19.1.9",
+    "@types/sinon": "17.0.4",
+    "@types/sinon-chai": "4.0.0",
+    "@web/test-runner": "0.20.2",
+    "@web/test-runner-playwright": "0.11.1",
+    "chai": "5.2.1",
+    "eslint": "9.32.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-prefer-arrow-functions": "3.6.2",
+    "eslint-plugin-regex": "1.10.0",
+    "eslint-plugin-require-extensions": "0.1.3",
+    "globals": "16.3.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.1.4",
+    "playwright": "1.54.2",
+    "prettier": "3.6.2",
+    "rimraf": "6.0.1",
+    "rollup": "4.46.2",
+    "sinon-chai": "4.0.0",
+    "typedoc": "0.28.9",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.38.0"
+  }
+}
